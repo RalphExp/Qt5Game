@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <QPainter>
+#include <QBrush>
 
 using namespace std;
 
@@ -49,6 +50,7 @@ void MainWindow::mousePressEvent(QMouseEvent* e) {
     y -= 4+h;
 
     /* check if (x,y) in the grid */
+
     // cerr << "mouse clicked(" << x << "," << y << ")";
 
     if (x < 0 || y < 0 || x >= kPanelSize || y >= kPanelSize) {
@@ -62,22 +64,31 @@ void MainWindow::mousePressEvent(QMouseEvent* e) {
     int b = x / kBoardSize;
     int r = (x-b*kBoardSize) / kGridSize;
     int c = (y-b*kBoardSize) / kGridSize;
-    // cerr << "board:" << b << ", row:" << r << ", col:" << c << endl;
 
-    board_.board_[size_t(r)][size_t(c)] = Board::O;
+    // cerr << "board:" << b << ", row:" << r << ", col:" << c << endl;
+    board_.board_[b][r][c] = (e->button() & Qt::LeftButton
+        ? Board::O : Board::X);
     update();
 }
 
-void MainWindow::drawCircle(QPainter& painter, int board, int row, int col) {
+void MainWindow::drawGrid(QPainter& painter, int b, int x, int y, int c) {
+    // cerr << "drawGrid(b:" << b << ",x:" << x << ",y:" << y << ",c:" << c << endl;
 
-}
+    auto h = menu_height_;
 
-void MainWindow::drawCross(QPainter& painter, int board, int row, int col) {
+    if (c == Board::O)
+        painter.setBrush(QBrush(Qt::red));
+    else if (c == Board::X)
+        painter.setBrush(QBrush(Qt::blue));
 
+    painter.drawEllipse(
+        4+b*kBoardSize+x*kGridSize,
+        4+h+b*kBoardSize+y*kGridSize, kGridSize, kGridSize);
 }
 
 void MainWindow::paintEvent(QPaintEvent*) {
     QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing);
     painter.setPen(pen_);
 
     int w = 4;
@@ -104,15 +115,8 @@ void MainWindow::paintEvent(QPaintEvent*) {
     for (int b = 0; b < 4; ++b) {
         for (int x = 0; x < 4; ++x) {
             for (int y = 0; y < 4; ++y) {
-                switch (board_.board_[size_t(x)][size_t(y)]) {
-                case Board::O:
-                    drawCircle(painter, b, x, y);
-                    break;
-                case Board::X:
-                    drawCross(painter, b, x, y);
-                    break;
-                default:
-                    break;
+                if (board_.board_[b][x][y] != Board::N) {
+                    drawGrid(painter, b, x, y, board_.board_[b][x][y]);
                 }
             }
         }

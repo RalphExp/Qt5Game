@@ -31,8 +31,7 @@ public:
 private:
     void startNewGame(void);
     void quitGame(void);
-    void drawCircle(QPainter& painter, int board, int row, int col);
-    void drawCross(QPainter& painter, int board, int row, int col);
+    void drawGrid(QPainter& painter, int board, int x, int y, int color);
     void paintEvent(QPaintEvent*) override;
     void mousePressEvent(QMouseEvent* event) override;
 
