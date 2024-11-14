@@ -33,6 +33,9 @@ private:
     void paintEvent(QPaintEvent*) override;
     void mousePressEvent(QMouseEvent* event) override;
 
+private slots:
+    void updateState(int stat);
+
 private:
     Ui::MainWindow *ui_;
     int menu_height_;

@@ -1136,24 +1136,6 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		board.h \
 		../../../Qt5.12.2/5.12.2/gcc_64/include/QtCore/QObject \
 		ui_mainwindow.h \
-		../../../Qt5.12.2/5.12.2/gcc_64/include/QtCore/QVariant \
-		../../../Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QAction \
-		../../../Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qaction.h \
-		../../../Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qactiongroup.h \
-		../../../Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QApplication \
-		../../../Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qapplication.h \
-		../../../Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcoreapplication.h \
-		../../../Qt5.12.2/5.12.2/gcc_64/include/QtCore/qeventloop.h \
-		../../../Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qdesktopwidget.h \
-		../../../Qt5.12.2/5.12.2/gcc_64/include/QtGui/qguiapplication.h \
-		../../../Qt5.12.2/5.12.2/gcc_64/include/QtGui/qinputmethod.h \
-		../../../Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QMenu \
-		../../../Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qmenu.h \
-		../../../Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QMenuBar \
-		../../../Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qmenubar.h \
-		../../../Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QStatusBar \
-		../../../Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qstatusbar.h \
-		../../../Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QWidget \
 		../../../Qt5.12.2/5.12.2/gcc_64/include/QtGui/QPainter \
 		../../../Qt5.12.2/5.12.2/gcc_64/include/QtGui/qpainter.h \
 		../../../Qt5.12.2/5.12.2/gcc_64/include/QtGui/qtextoption.h \

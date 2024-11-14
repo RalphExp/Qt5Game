@@ -1,25 +1,39 @@
 #ifndef BOARD_H
 #define BOARD_H
 
-#include <vector>
 #include <mutex>
 #include <future>
-
 #include <QObject>
 
 using namespace std;
 
 class MainWindow;
 
+class Grid {
+public:
+    Grid(int b = 0, int x = 0, int y = 0) : b(b),x(x),y(y){}
+    int b = 0;
+    int x = 0;
+    int y = 0;
+};
+
+typedef vector<Grid> Path;
+
 class Board : public QObject {
 Q_OBJECT
 public:
-    static const int N = 0;
-    static const int O = 1;
-    static const int X = 2;
+    /* grid stat */
+    static const int NN = 0;
+    static const int OO = 1;
+    static const int XX = 2;
+
+    /* game stat */
     static const int kNotStart = 0;
     static const int kPlaying = 1;
-    static const int kEnded = 2;
+    static const int kFirstWin = 2;
+    static const int kSecondWin = 3;
+
+    /* player stat */
     static const int kFirstPlay = 0;
     static const int kSecondPlay = 1;
 
@@ -37,6 +51,9 @@ public:
     bool isPlayerTurn(void);
 
     /* @brief: if valid return 1, else return 0 */
+    int getBoard(int b, int x, int y);
+
+    /* @brief: if valid return 1, else return 0 */
     int setBoard(int b, int x, int y);
 
     /* @brief: start game */
@@ -48,14 +65,20 @@ public:
     /* @brief: return 1 if gameover 0 otherwise. */
     int next(int b, int x, int y);
 
+    /* index by grid */
+    int operator[](const Grid& g);
+
 signals:
-    void computerDone(void);
+    void computerDone(int);
 
 public:
     int board_[4][4][4];
-    bool checkGameOver(int b, int x, int y);
+    void checkGameOver(int b, int x, int y);
 
 private:
+    /* @brief: get all the paths connected to the given point. */
+    vector<Path> getPaths(int b, int x, int y);
+
     int stat_;
     int player_;
     bool first_play_;
