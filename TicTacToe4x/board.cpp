@@ -11,6 +11,7 @@
 
 Board::Board() : stat_(kNotStart), player_(kFirstPlay) {
     reset();
+    srand(0);
 }
 
 Board::~Board() {
@@ -19,6 +20,7 @@ Board::~Board() {
 
 void Board::reset() {
     memset(board_, 0, sizeof(board_));
+    win_path_.clear();
 }
 
 void Board::setWindow(MainWindow* win) {
@@ -53,31 +55,67 @@ bool Board::isPlayerTurn(void) {
     return b;
 }
 
-int Board::next(int b, int x, int y) {
+int Board::getScore(int b, int x, int y) {
+    int pc = first_play_ ? OO : XX; // player color
+    int cc = first_play_ ? XX : OO; // computer color
+
+    int score = 0;
+    vector<Path> paths = getPaths(b, x, y);
+    for (auto& path : paths) {
+        int pcCount = 0;
+        int ccCount = 0;
+        for (auto& g : path) {
+            if (board_[g.b][g.x][g.y] == pc)
+                ++pcCount;
+            else if (board_[g.b][g.x][g.y] == cc)
+                ++ccCount;
+            if (pcCount == 3 && ccCount == 0)
+                score += 100;
+            else if (pcCount == 2 && ccCount == 0)
+                score += 6;
+            else if (pcCount == 1 && ccCount == 0)
+                score += 2;
+            else if (ccCount == 1 && pcCount == 0)
+                score += 1;
+            else if (ccCount == 2 && pcCount == 0)
+                score += 3;
+            else if (ccCount == 3 && pcCount == 0)
+                score += 1000;
+        }
+    }
+    return score;
+}
+
+void Board::next(void) {
     int mb = 0;
     int mx = 0;
     int my = 0;
+    int score = -1;
 
-    for (int a = 0; a < 4; ++a) {
-        for (int r = 0; r < 4; ++r) {
-            for (int c = 0; c < 4; ++c) {
-                if (board_[a][r][c] == NN) {
-                    mb = a;
-                    mx = r;
-                    my = c;
-                    goto done;
-                }
+    int num = rand() % 64;
+    for (int i = 0; i < 64; ++i) {
+        int board = num / 16;
+        int col = num % 4;
+        int row = (num - 16 * board) / 4;
+
+        if (board_[board][row][col] == NN) {
+            int new_score = getScore(board, row, col);
+            if (score < new_score) {
+                mb = board;
+                mx = row;
+                my = col;
+                score = new_score;
             }
         }
+        ++num;
+        num %= 64;
     }
 
-done:
     sleep(1);
     board_[mb][mx][my] = player_ == kFirstPlay ? OO : XX;
     checkGameOver(mb, mx, my);
     emit computerDone(stat_);
     player_ = !player_;
-    return 0;
 }
 
 vector<Path> Board::getPaths(int b, int x, int y) {
@@ -242,6 +280,7 @@ void Board::checkGameOver(int b, int x, int y) {
                 stat_ = kFirstWin;
             else
                 stat_ = kSecondWin;
+            win_path_ = move(p);
             return;
         }
     }
@@ -258,8 +297,8 @@ int Board::setBoard(int b, int x, int y) {
 
     player_ = !player_;
     if (stat_ < kFirstWin) {
-        future_ = std::async(std::launch::async, [this, b, x, y](){
-            next(b, x, y);
+        future_ = std::async(std::launch::async, [this](){
+            next();
         });
     }
     return stat_;

@@ -103,6 +103,12 @@ void MainWindow::drawGrid(QPainter& painter, int b, int x, int y, int c) {
     else if (c == Board::XX)
         painter.setBrush(QBrush(Qt::blue));
 
+    Grid g{b, x, y};
+    auto path = board_.getWinPath();
+    if (std::find(path.begin(), path.end(), g) != path.end()) {
+        painter.setBrush(QBrush(Qt::green));
+    }
+
     painter.drawEllipse(
         4+b*kBoardSize+x*kGridSize,
         4+h+b*kBoardSize+y*kGridSize, kGridSize, kGridSize);

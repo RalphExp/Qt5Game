@@ -12,6 +12,9 @@ class MainWindow;
 class Grid {
 public:
     Grid(int b = 0, int x = 0, int y = 0) : b(b),x(x),y(y){}
+    bool operator==(const Grid& g) {
+        return b == g.b && x == g.x && y == g.y;
+    }
     int b = 0;
     int x = 0;
     int y = 0;
@@ -62,11 +65,13 @@ public:
     /* @brief: reset board, clear all the data. */
     void reset(void);
 
-    /* @brief: return 1 if gameover 0 otherwise. */
-    int next(int b, int x, int y);
+    /* @brief: computer's turn */
+    void next();
 
     /* index by grid */
     int operator[](const Grid& g);
+
+    Path& getWinPath() { return win_path_; }
 
 signals:
     void computerDone(int);
@@ -78,6 +83,7 @@ public:
 private:
     /* @brief: get all the paths connected to the given point. */
     vector<Path> getPaths(int b, int x, int y);
+    int getScore(int b, int x, int y);
 
     int stat_;
     int player_;
@@ -86,6 +92,7 @@ private:
     MainWindow* win_;
     std::mutex mtx_;
     std::future<void> future_;
+    Path win_path_;
 };
 
 #endif // BOARD_H
