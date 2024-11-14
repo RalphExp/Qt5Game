@@ -45,15 +45,16 @@ void MainWindow::quitGame(void) {
     close();
 }
 
-void MainWindow::mousePressEvent(QMouseEvent* e) {
-    if (!(e->buttons() & Qt::LeftButton))
-        return;
+void MainWindow::showBoardStat(void) {
+    cerr << "State: " << board_.getState() << "|"
+         << "FirstPlay: " << boolalpha << board_.isFirstPlay() << "|"
+         << "Play's turn: " << board_.isPlayerTurn() << endl;
+}
 
+void MainWindow::handleMousePress(int x, int y) {
     if (!board_.isPlayerTurn())
         return;
 
-    int x = e->x();
-    int y = e->y();
     int h = menu_height_;
 
     // adjust
@@ -84,6 +85,14 @@ void MainWindow::mousePressEvent(QMouseEvent* e) {
         } else {
             QMessageBox::information(this, "TicTacToeX4", "You Win");
         }
+    }
+}
+
+void MainWindow::mousePressEvent(QMouseEvent* e) {
+    if (e->button() & Qt::LeftButton) {
+        return handleMousePress(e->x(), e->y());
+    } else {
+        return showBoardStat();
     }
 }
 

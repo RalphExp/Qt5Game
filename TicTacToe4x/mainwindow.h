@@ -33,6 +33,9 @@ private:
     void paintEvent(QPaintEvent*) override;
     void mousePressEvent(QMouseEvent* event) override;
 
+    void handleMousePress(int xpos, int ypos);
+    void showBoardStat(void);
+
 private slots:
     void updateState(int stat);
 

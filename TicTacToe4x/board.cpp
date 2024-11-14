@@ -63,8 +63,8 @@ int Board::next(int b, int x, int y) {
             for (int c = 0; c < 4; ++c) {
                 if (board_[a][r][c] == NN) {
                     mb = a;
-                    mx = 0;
-                    my = 0;
+                    mx = r;
+                    my = c;
                     goto done;
                 }
             }
@@ -225,7 +225,7 @@ void Board::checkGameOver(int b, int x, int y) {
         bool over = true;
         for (auto &g : p) {
             auto mark = getBoard(g.b, g.x, g.y);
-            if (mark == Board::NN) {
+            if (mark == NN) {
                 over = false;
                 break;
             } else if (mark == OO && player_ == kSecondPlay) {
@@ -236,7 +236,7 @@ void Board::checkGameOver(int b, int x, int y) {
                 break;
             }
         }
-        if (over == true) {
+        if (over) {
             if (player_ == kFirstPlay)
                 stat_ = kFirstWin;
             else
