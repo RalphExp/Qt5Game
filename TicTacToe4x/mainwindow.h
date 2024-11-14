@@ -15,15 +15,13 @@ class QPen;
 
 class MainWindow : public QMainWindow
 {
-    Q_OBJECT
+Q_OBJECT
 
 public:
-    enum {
-      kGridSize = 32,
-      kBoardSize = kGridSize*4,
-      kPanelSize = kBoardSize*4,
-      kPenSize = 2
-    };
+    static constexpr int kGridSize = 32;
+    static constexpr int kBoardSize = kGridSize*4;
+    static constexpr int kPanelSize = kBoardSize*4;
+    static constexpr int kPenSize = 2;
 
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override;

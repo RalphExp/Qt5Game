@@ -4,6 +4,7 @@
 #include <iostream>
 #include <QPainter>
 #include <QBrush>
+#include <QMessageBox>
 
 using namespace std;
 
@@ -11,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), ui_(new Ui::MainWindow) {
     ui_->setupUi(this);
 
-    // pen
+    board_.setWindow(this);
     pen_.setColor(Qt::black);
     pen_.setWidth(kPenSize);
     pen_.setCapStyle(Qt::RoundCap);
@@ -33,7 +34,11 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::startNewGame(void) {
+    auto res = QMessageBox::information(this, "TicTacToex4", "Go first?",
+            QMessageBox::Yes, QMessageBox::No);
 
+    board_.start(res == QMessageBox::Yes);
+    update();
 }
 
 void MainWindow::quitGame(void) {
@@ -41,6 +46,12 @@ void MainWindow::quitGame(void) {
 }
 
 void MainWindow::mousePressEvent(QMouseEvent* e) {
+    if (!(e->buttons() & Qt::LeftButton))
+        return;
+
+    if (!board_.isPlayerTurn())
+        return;
+
     int x = e->x();
     int y = e->y();
     int h = menu_height_;
@@ -49,15 +60,9 @@ void MainWindow::mousePressEvent(QMouseEvent* e) {
     x -= 4;
     y -= 4+h;
 
-    /* check if (x,y) in the grid */
-
-    // cerr << "mouse clicked(" << x << "," << y << ")";
-
     if (x < 0 || y < 0 || x >= kPanelSize || y >= kPanelSize) {
-        cerr << endl;
         return;
     } else if (x/kBoardSize != y/kBoardSize) {
-        cerr << endl;
         return;
     }
 
@@ -65,17 +70,12 @@ void MainWindow::mousePressEvent(QMouseEvent* e) {
     int r = (x-b*kBoardSize) / kGridSize;
     int c = (y-b*kBoardSize) / kGridSize;
 
-    // cerr << "board:" << b << ", row:" << r << ", col:" << c << endl;
-    board_.board_[b][r][c] = (e->button() & Qt::LeftButton
-        ? Board::O : Board::X);
-    update();
+    board_.setBoard(b, r, c);
+    // update();
 }
 
 void MainWindow::drawGrid(QPainter& painter, int b, int x, int y, int c) {
-    // cerr << "drawGrid(b:" << b << ",x:" << x << ",y:" << y << ",c:" << c << endl;
-
     auto h = menu_height_;
-
     if (c == Board::O)
         painter.setBrush(QBrush(Qt::red));
     else if (c == Board::X)
@@ -87,6 +87,9 @@ void MainWindow::drawGrid(QPainter& painter, int b, int x, int y, int c) {
 }
 
 void MainWindow::paintEvent(QPaintEvent*) {
+    if (board_.getState() == Board::kNotStart)
+        return;
+
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setPen(pen_);
