@@ -14,9 +14,9 @@ EQ            = =
 
 CC            = gcc
 CXX           = g++
-DEFINES       = -DQT_DEPRECATED_WARNINGS -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
-CFLAGS        = -pipe -O2 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-CXXFLAGS      = -pipe -O2 -std=gnu++1z -Wall -W -D_REENTRANT -fPIC $(DEFINES)
+DEFINES       = -DQT_DEPRECATED_WARNINGS -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
+CFLAGS        = -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
+CXXFLAGS      = -pipe -g -std=gnu++1z -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 INCPATH       = -I. -I../../../Qt5.12.2/5.12.2/gcc_64/include -I../../../Qt5.12.2/5.12.2/gcc_64/include/QtWidgets -I../../../Qt5.12.2/5.12.2/gcc_64/include/QtGui -I../../../Qt5.12.2/5.12.2/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -I. -I../../../Qt5.12.2/5.12.2/gcc_64/mkspecs/linux-g++
 QMAKE         = /home/mayan/Qt5.12.2/5.12.2/gcc_64/bin/qmake
 DEL_FILE      = rm -f
@@ -39,7 +39,7 @@ COMPRESS      = gzip -9f
 DISTNAME      = TicTacToe4x1.0.0
 DISTDIR = /home/mayan/Git/Qt5Game/TicTacToe4x/.tmp/TicTacToe4x1.0.0
 LINK          = g++
-LFLAGS        = -Wl,-O1 -Wl,-rpath,/home/mayan/Qt5.12.2/5.12.2/gcc_64/lib
+LFLAGS        = -Wl,-rpath,/home/mayan/Qt5.12.2/5.12.2/gcc_64/lib
 LIBS          = $(SUBLIBS) -L/home/mayan/Qt5.12.2/5.12.2/gcc_64/lib -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread   
 AR            = ar cqs
 RANLIB        = 
@@ -705,7 +705,7 @@ compiler_moc_predefs_make_all: moc_predefs.h
 compiler_moc_predefs_clean:
 	-$(DEL_FILE) moc_predefs.h
 moc_predefs.h: ../../../Qt5.12.2/5.12.2/gcc_64/mkspecs/features/data/dummy.cpp
-	g++ -pipe -O2 -std=gnu++1z -Wall -W -dM -E -o moc_predefs.h ../../../Qt5.12.2/5.12.2/gcc_64/mkspecs/features/data/dummy.cpp
+	g++ -pipe -g -std=gnu++1z -Wall -W -dM -E -o moc_predefs.h ../../../Qt5.12.2/5.12.2/gcc_64/mkspecs/features/data/dummy.cpp
 
 compiler_moc_header_make_all: moc_mainwindow.cpp moc_board.cpp
 compiler_moc_header_clean:
@@ -1270,7 +1270,6 @@ moc_board.o: moc_board.cpp
 install_target: first FORCE
 	@test -d $(INSTALL_ROOT)/opt/TicTacToe4x/bin || mkdir -p $(INSTALL_ROOT)/opt/TicTacToe4x/bin
 	-$(QINSTALL_PROGRAM) $(QMAKE_TARGET) $(INSTALL_ROOT)/opt/TicTacToe4x/bin/$(QMAKE_TARGET)
-	-$(STRIP) $(INSTALL_ROOT)/opt/TicTacToe4x/bin/$(QMAKE_TARGET)
 
 uninstall_target: FORCE
 	-$(DEL_FILE) $(INSTALL_ROOT)/opt/TicTacToe4x/bin/$(QMAKE_TARGET)

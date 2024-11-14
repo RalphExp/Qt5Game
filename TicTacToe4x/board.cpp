@@ -70,12 +70,13 @@ int Board::next(int b, int x, int y) {
             }
         }
     }
+
 done:
     sleep(1);
     board_[mb][mx][my] = player_ == kFirstPlay ? OO : XX;
-    checkGameOver(b, x, y);
-    player_ = !player_;
+    checkGameOver(mb, mx, my);
     emit computerDone(stat_);
+    player_ = !player_;
     return 0;
 }
 
