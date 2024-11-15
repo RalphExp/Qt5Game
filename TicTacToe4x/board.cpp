@@ -9,7 +9,7 @@
 #include <thread>
 #include <vector>
 
-Board::Board() : stat_(kNotStart), player_(kFirstPlay) {
+Board::Board() {
     reset();
     srand(0);
 }
@@ -19,6 +19,8 @@ Board::~Board() {
 }
 
 void Board::reset() {
+    stat_ = kNotStart;
+    steps_ = 0;
     memset(board_, 0, sizeof(board_));
     win_path_.clear();
 }
@@ -30,9 +32,9 @@ void Board::setWindow(MainWindow* win) {
 }
 
 void Board::start(bool firstPlay) {
+    reset();
     stat_ = kPlaying;
     first_play_ = firstPlay;
-    reset();
 
     if (!firstPlay) {
         /* AI is firstplay */
@@ -40,6 +42,7 @@ void Board::start(bool firstPlay) {
         int x = rand() % 4;
         int y = rand() % 4;
         board_[b][x][y] = OO;
+        ++steps_;
         player_ = kSecondPlay;
     } else {
         player_ = kFirstPlay;
@@ -49,7 +52,7 @@ void Board::start(bool firstPlay) {
 bool Board::isPlayerTurn(void) {
     bool b;
     mtx_.lock();
-    b = (player_ == kFirstPlay && first_play_) ||
+    b = (stat_ != kDraw && stat_ != kNotStart && player_ == kFirstPlay && first_play_) ||
         (player_ == kSecondPlay && !first_play_);
     mtx_.unlock();
     return b;
@@ -59,7 +62,7 @@ int Board::getScore(int b, int x, int y) {
     int pc = first_play_ ? OO : XX; // player color
     int cc = first_play_ ? XX : OO; // computer color
 
-    int score = 0;
+    int score = -1;
     vector<Path> paths = getPaths(b, x, y);
     for (auto& path : paths) {
         int pcCount = 0;
@@ -72,13 +75,13 @@ int Board::getScore(int b, int x, int y) {
             if (pcCount == 3 && ccCount == 0)
                 score += 100;
             else if (pcCount == 2 && ccCount == 0)
-                score += 6;
+                score += 4;
             else if (pcCount == 1 && ccCount == 0)
                 score += 2;
             else if (ccCount == 1 && pcCount == 0)
                 score += 1;
             else if (ccCount == 2 && pcCount == 0)
-                score += 3;
+                score += 6;
             else if (ccCount == 3 && pcCount == 0)
                 score += 1000;
         }
@@ -258,6 +261,7 @@ int Board::getBoard(int b, int x, int y) {
 }
 
 void Board::checkGameOver(int b, int x, int y) {
+    ++steps_;
     vector<Path> v = getPaths(b, x, y);
     for (auto& p : v) {
         assert(p.size() == 4);
@@ -283,6 +287,10 @@ void Board::checkGameOver(int b, int x, int y) {
             win_path_ = move(p);
             return;
         }
+    }
+    if (steps_ == 64) {
+        stat_ = kDraw;
+
     }
 }
 

@@ -35,6 +35,7 @@ public:
     static const int kPlaying = 1;
     static const int kFirstWin = 2;
     static const int kSecondWin = 3;
+    static const int kDraw = 4;
 
     /* player stat */
     static const int kFirstPlay = 0;
@@ -85,6 +86,7 @@ private:
     vector<Path> getPaths(int b, int x, int y);
     int getScore(int b, int x, int y);
 
+    int steps_;
     int stat_;
     int player_;
     bool first_play_;

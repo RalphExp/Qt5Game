@@ -72,20 +72,7 @@ void MainWindow::handleMousePress(int x, int y) {
     int c = (y-b*kBoardSize) / kGridSize;
 
     int stat = board_.setBoard(b, r, c);
-    update();
-    if (stat == Board::kFirstWin) {
-        if (board_.isFirstPlay()) {
-            QMessageBox::information(this, "TicTacToeX4", "You Win");
-        } else {
-            QMessageBox::information(this, "TicTacToeX4", "You Lose");
-        }
-    } else if (stat == Board::kSecondWin) {
-        if (board_.isFirstPlay()) {
-            QMessageBox::information(this, "TicTacToeX4", "You Lose");
-        } else {
-            QMessageBox::information(this, "TicTacToeX4", "You Win");
-        }
-    }
+    updateState(stat);
 }
 
 void MainWindow::mousePressEvent(QMouseEvent* e) {
@@ -168,5 +155,7 @@ void MainWindow::updateState(int stat) {
         } else {
             QMessageBox::information(this, "TicTacToeX4", "You Win");
         }
+    } else if (stat == Board::kDraw) {
+        QMessageBox::information(this, "TicTacToeX4", "Draw Game");
     }
 }
