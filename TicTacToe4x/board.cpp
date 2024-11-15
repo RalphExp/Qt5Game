@@ -51,10 +51,8 @@ void Board::start(bool firstPlay) {
 
 bool Board::isPlayerTurn(void) {
     bool b;
-    mtx_.lock();
     b = (stat_ != kDraw && stat_ != kNotStart && player_ == kFirstPlay && first_play_) ||
         (player_ == kSecondPlay && !first_play_);
-    mtx_.unlock();
     return b;
 }
 
@@ -63,6 +61,7 @@ int Board::getScore(int b, int x, int y) {
     int cc = first_play_ ? XX : OO; // computer color
 
     int score = -1;
+    /* TODO: use minimax-alpha-beta algorithm to optimize searching. */
     vector<Path> paths = getPaths(b, x, y);
     for (auto& path : paths) {
         int pcCount = 0;
@@ -72,19 +71,19 @@ int Board::getScore(int b, int x, int y) {
                 ++pcCount;
             else if (board_[g.b][g.x][g.y] == cc)
                 ++ccCount;
-            if (pcCount == 3 && ccCount == 0)
-                score += 1000;
-            else if (pcCount == 2 && ccCount == 0)
-                score += 4;
-            else if (pcCount == 1 && ccCount == 0)
-                score += 2;
-            else if (ccCount == 1 && pcCount == 0)
-                score += 1;
-            else if (ccCount == 2 && pcCount == 0)
-                score += 3;
-            else if (ccCount == 3 && pcCount == 0)
-                score += 10000;
         }
+        if (pcCount == 3 && ccCount == 0)
+            score += 1000;
+        else if (pcCount == 2 && ccCount == 0)
+            score += 4;
+        else if (pcCount == 1 && ccCount == 0)
+            score += 2;
+        else if (ccCount == 1 && pcCount == 0)
+            score += 1;
+        else if (ccCount == 2 && pcCount == 0)
+            score += 3;
+        else if (ccCount == 3 && pcCount == 0)
+            score += 10000;
     }
     return score;
 }
@@ -164,7 +163,7 @@ vector<Path> Board::getPaths(int b, int x, int y) {
 
         /* 4d diagonal */
         if (b == x && b == y) {
-            path = Path {
+            path = Path{
                 {0, 0, 0},
                 {1, 1, 1},
                 {2, 2, 2},
@@ -172,7 +171,7 @@ vector<Path> Board::getPaths(int b, int x, int y) {
             };
             v.push_back(path);
         } else if (b + x == 3) {
-            path = Path {
+            path = Path{
                 {0, 3, 3},
                 {1, 2, 2},
                 {2, 1, 1},
@@ -233,7 +232,7 @@ vector<Path> Board::getPaths(int b, int x, int y) {
 
     /* 4d horizontal */
     if (b == y) {
-        path = Path {
+        path = Path{
             {0, x, 0},
             {1, x, 1},
             {2, x, 2},
@@ -241,7 +240,7 @@ vector<Path> Board::getPaths(int b, int x, int y) {
         };
         v.push_back(path);
     } else if (b + y == 3) {
-        path = Path {
+        path = Path{
             {0, x, 3},
             {1, x, 2},
             {2, x, 3},
@@ -294,8 +293,6 @@ void Board::checkGameOver(int b, int x, int y) {
 }
 
 int Board::setBoard(int b, int x, int y) {
-    std::lock_guard guard(mtx_);
-
     if (board_[b][x][y] != NN)
         return -1;
 

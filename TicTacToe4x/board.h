@@ -1,7 +1,6 @@
 #ifndef BOARD_H
 #define BOARD_H
 
-#include <mutex>
 #include <future>
 #include <QObject>
 
@@ -92,7 +91,6 @@ private:
     bool first_play_;
 
     MainWindow* win_;
-    std::mutex mtx_;
     std::future<void> future_;
     Path win_path_;
 };
