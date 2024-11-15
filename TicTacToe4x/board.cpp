@@ -73,7 +73,7 @@ int Board::getScore(int b, int x, int y) {
             else if (board_[g.b][g.x][g.y] == cc)
                 ++ccCount;
             if (pcCount == 3 && ccCount == 0)
-                score += 100;
+                score += 1000;
             else if (pcCount == 2 && ccCount == 0)
                 score += 4;
             else if (pcCount == 1 && ccCount == 0)
@@ -81,9 +81,9 @@ int Board::getScore(int b, int x, int y) {
             else if (ccCount == 1 && pcCount == 0)
                 score += 1;
             else if (ccCount == 2 && pcCount == 0)
-                score += 6;
+                score += 3;
             else if (ccCount == 3 && pcCount == 0)
-                score += 1000;
+                score += 10000;
         }
     }
     return score;
@@ -290,7 +290,6 @@ void Board::checkGameOver(int b, int x, int y) {
     }
     if (steps_ == 64) {
         stat_ = kDraw;
-
     }
 }
 
