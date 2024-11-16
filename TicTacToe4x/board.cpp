@@ -244,8 +244,8 @@ vector<Path> Board::getPaths(int b, int x, int y) {
         path = Path{
             {0, x, 3},
             {1, x, 2},
-            {2, x, 3},
-            {3, x, 1}
+            {2, x, 1},
+            {3, x, 0}
         };
         v.push_back(path);
     }
