@@ -52,7 +52,7 @@ void MainWindow::showBoardStat(void) {
 }
 
 void MainWindow::handleMousePress(int x, int y) {
-    if (!board_.isPlayerTurn())
+    if (board_.getState() >= Board::kFirstWin || !board_.isPlayerTurn())
         return;
 
     int h = menu_height_;
@@ -78,7 +78,7 @@ void MainWindow::handleMousePress(int x, int y) {
 void MainWindow::mousePressEvent(QMouseEvent* e) {
     if (e->button() & Qt::LeftButton) {
         return handleMousePress(e->x(), e->y());
-    } else {
+    } else if (e->button() & Qt::RightButton) {
         return showBoardStat();
     }
 }
@@ -102,6 +102,7 @@ void MainWindow::drawGrid(QPainter& painter, int b, int x, int y, int c) {
 }
 
 void MainWindow::paintEvent(QPaintEvent*) {
+    cerr << "PaintEvent" << endl;
     if (board_.getState() == Board::kNotStart)
         return;
 

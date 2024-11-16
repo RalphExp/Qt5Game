@@ -6,8 +6,8 @@
 #include <assert.h>
 #include <unistd.h>
 
-#include <thread>
 #include <vector>
+#include <iostream>
 
 Board::Board() {
     reset();
@@ -75,13 +75,13 @@ int Board::getScore(int b, int x, int y) {
         if (pcCount == 3 && ccCount == 0)
             score += 1000;
         else if (pcCount == 2 && ccCount == 0)
-            score += 4;
+            score += 6;
         else if (pcCount == 1 && ccCount == 0)
-            score += 2;
+            score += 4;
         else if (ccCount == 1 && pcCount == 0)
             score += 1;
         else if (ccCount == 2 && pcCount == 0)
-            score += 3;
+            score += 2;
         else if (ccCount == 3 && pcCount == 0)
             score += 10000;
     }
@@ -115,6 +115,7 @@ void Board::next(void) {
 
     sleep(1);
     board_[mb][mx][my] = player_ == kFirstPlay ? OO : XX;
+    cerr << "Computer: (" << mb << "," << mx << "," << my << ")" << endl;
     checkGameOver(mb, mx, my);
     emit computerDone(stat_);
     player_ = !player_;
@@ -297,6 +298,7 @@ int Board::setBoard(int b, int x, int y) {
         return -1;
 
     board_[b][x][y] = player_ == kFirstPlay ? OO : XX;
+    cerr << "Player: (" << b << "," << x << "," << y << ")" << endl;
     checkGameOver(b, x, y);
 
     player_ = !player_;
