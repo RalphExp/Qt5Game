@@ -48,6 +48,12 @@ public:
 
     void setWindow(MainWindow* win);
 
+    bool isPlayerWin();
+    bool isComputerWin();
+
+    int minimax(int depth, bool maximizing, 
+        int alpha, int beta, int player, int computer);
+
     bool isFirstPlay(void) { return first_play_; }
 
     /* @brief: player or computer? */

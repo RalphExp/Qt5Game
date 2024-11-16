@@ -25,8 +25,7 @@ void Board::reset() {
 
 void Board::setWindow(MainWindow* win) {
     win_ = win;
-    connect(this, SIGNAL(computerDone(int)),
-            win_, SLOT(updateState(int)));
+    connect(this, SIGNAL(computerDone(int)), win_, SLOT(updateState(int)));
 }
 
 void Board::start(bool firstPlay) {
@@ -48,10 +47,9 @@ void Board::start(bool firstPlay) {
 
 bool Board::isPlayerTurn(void) {
     bool b;
-    mtx_.lock();
-    b = (player_ == kFirstPlay && first_play_) ||
-        (player_ == kSecondPlay && !first_play_);
-    mtx_.unlock();
+    b = (stat_ != kDraw &&
+         stat_ != kNotStart &&
+         player_ == kFirstPlay && first_play_) ||
     return b;
 }
 
@@ -86,6 +84,72 @@ int Board::getScore(int b, int x, int y) {
     return score;
 }
 
+bool Board::isPlayerWin() {
+    return ((stat_ == kFirstWin) && first_play_) ||
+           ((stat_ == kSecondWin) && !first_play_);
+}
+
+bool Board::isComputerWin() {
+    return ((stat_ == kFirstWin) && !first_play_) ||
+           ((stat_ == kSecondWin) && first_play_);
+}
+
+int Board::minimax(int depth, bool maximizing,
+        int alpha, int beta, int player, int computer) {
+
+    if (isComputerWin()) {
+        return 10 - depth;
+    } else if (isPlayerWin()) {
+        return depth - 10;
+    } else if (steps_ == 64 || depth == 3) {
+        return 0;
+    }
+
+    if (maximizing) {
+        int best = 0x80000000;
+        for (int b = 0; b < 4; ++b) {
+            for (int x = 0; x < 4; ++x) {
+                for (int y = 0; y < 4; ++y) {
+                    if (board_[b][x][y] == NN) {
+                        board_[b][x][y] = computer;
+                        checkGameOver(b, x, y);
+                        best = max(best, minimax(depth+1, false, alpha,
+                            beta, player, computer));
+                        --steps_;
+                        board_[b][x][y] = NN;
+                        alpha = max(alpha, best);
+                        if (beta <= alpha) {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return best;
+    } else {
+        int best = 0x7fffffff;
+        for (int b = 0; b < 4; ++b) {
+            for (int x = 0; x < 4; ++x) {
+                for (int y = 0; y < 4; ++y) {
+                    if (board_[b][x][y] == NN) {
+                        board_[b][x][y] = player;
+                        checkGameOver(b, x, y);
+                        best = min(best, minimax(depth+1, true, alpha,
+                            beta, player, computer));
+                        --steps_;
+                        board_[b][x][y] = NN;
+                        beta = min(beta, best);
+                        if (beta <= alpha) {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return best;
+    }
+}
+
 void Board::next(void) {
     int mb = 0;
     int mx = 0;
@@ -93,13 +157,16 @@ void Board::next(void) {
     int score = -1;
 
     int num = rand() % 64;
+    int cc = first_play_ ? XX : OO;
+    int pc = first_play_ ? OO : XX;
+
     for (int i = 0; i < 64; ++i) {
         int board = num / 16;
         int col = num % 4;
         int row = (num - 16 * board) / 4;
 
         if (board_[board][row][col] == NN) {
-            int new_score = getScore(board, row, col);
+            int new_score = minimax(0, true, 0x80000000, 0x7fffffff, pc, cc);
             if (score < new_score) {
                 mb = board;
                 mx = row;
@@ -111,7 +178,7 @@ void Board::next(void) {
         num %= 64;
     }
 
-    sleep(1);
+    // sleep(1);
     board_[mb][mx][my] = player_ == kFirstPlay ? OO : XX;
     checkGameOver(mb, mx, my);
     emit computerDone(stat_);
