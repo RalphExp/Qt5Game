@@ -85,20 +85,34 @@ void MainWindow::mousePressEvent(QMouseEvent* e) {
 
 void MainWindow::drawGrid(QPainter& painter, int b, int x, int y, int c) {
     auto h = menu_height_;
-    if (c == Board::OO)
-        painter.setBrush(QBrush(Qt::red));
-    else if (c == Board::XX)
-        painter.setBrush(QBrush(Qt::blue));
-
     Grid g{b, x, y};
     auto path = board_.getWinPath();
     if (std::find(path.begin(), path.end(), g) != path.end()) {
-        painter.setBrush(QBrush(Qt::green));
+        painter.setPen(QPen(Qt::magenta, 10));
+    } else if (c == Board::OO) {
+        painter.setPen(QPen(Qt::red, 5));
+    } else if (c == Board::XX) {
+        painter.setPen(QPen(Qt::blue, 5));
     }
 
-    painter.drawEllipse(
-        4+b*kBoardSize+x*kGridSize,
-        4+h+b*kBoardSize+y*kGridSize, kGridSize, kGridSize);
+    if (c == Board::OO) {
+        painter.drawEllipse(
+            4+b*kBoardSize+x*kGridSize+5,
+            4+h+b*kBoardSize+y*kGridSize+5,
+            kGridSize-10,
+            kGridSize-10);
+    } else if (c == Board::XX) {
+        painter.drawLine(
+            4+b*kBoardSize+x*kGridSize+5,
+            4+h+b*kBoardSize+y*kGridSize+5,
+            4+b*kBoardSize+x*kGridSize+kGridSize-5,
+            4+h+b*kBoardSize+y*kGridSize+kGridSize-5);
+        painter.drawLine(
+            4+b*kBoardSize+x*kGridSize+kGridSize-5,
+            4+h+b*kBoardSize+y*kGridSize+5,
+            4+b*kBoardSize+x*kGridSize+5,
+            4+h+b*kBoardSize+y*kGridSize+kGridSize-5);
+    }
 }
 
 void MainWindow::paintEvent(QPaintEvent*) {
@@ -144,19 +158,20 @@ void MainWindow::paintEvent(QPaintEvent*) {
 
 void MainWindow::updateState(int stat) {
     update();
+    const QString title = "TicTacToe X 4";
     if (stat == Board::kFirstWin) {
         if (board_.isFirstPlay()) {
-            QMessageBox::information(this, "TicTacToeX4", "You Win");
+            QMessageBox::information(this, title, "You Win");
         } else {
-            QMessageBox::information(this, "TicTacToeX4", "You Lose");
+            QMessageBox::information(this, title, "You Lose");
         }
     } else if (stat == Board::kSecondWin) {
         if (board_.isFirstPlay()) {
-            QMessageBox::information(this, "TicTacToeX4", "You Lose");
+            QMessageBox::information(this, title, "You Lose");
         } else {
-            QMessageBox::information(this, "TicTacToeX4", "You Win");
+            QMessageBox::information(this, title, "You Win");
         }
     } else if (stat == Board::kDraw) {
-        QMessageBox::information(this, "TicTacToeX4", "Draw Game");
+        QMessageBox::information(this, title, "Draw Game");
     }
 }

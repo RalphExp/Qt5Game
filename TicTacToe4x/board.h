@@ -83,7 +83,7 @@ public:
 private:
     /* @brief: get all the paths connected to the given point. */
     vector<Path> getPaths(int b, int x, int y);
-    int getScore(int b, int x, int y);
+    double getScore(int b, int x, int y);
 
     int steps_;
     int stat_;
