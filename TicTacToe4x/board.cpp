@@ -56,11 +56,11 @@ bool Board::isPlayerTurn(void) {
     return b;
 }
 
-double Board::getScore(int b, int x, int y) {
+int Board::getScore(int b, int x, int y) {
     int pc = first_play_ ? OO : XX; // player color
     int cc = first_play_ ? XX : OO; // computer color
 
-    double score = -1;
+    int score = 0;
     /* TODO: use minimax-alpha-beta algorithm to optimize searching. */
     vector<Path> paths = getPaths(b, x, y);
     for (auto& path : paths) {
