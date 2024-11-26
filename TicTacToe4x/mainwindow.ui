@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -32,7 +35,6 @@
    </widget>
    <addaction name="menuNew"/>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
   <action name="actionStart">
    <property name="text">
     <string>start</string>
