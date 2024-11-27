@@ -18,10 +18,14 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
 
 private slots:
+    void restart(void);
     void startSimple(void);
+    void startMedium(void);
+    void startHard(void);
+    void startCustom(void);
 
 private:
-    Ui::MainWindow *ui;
+    Ui::MainWindow *ui_;
 };
 
 #endif // MAINWINDOW_H
