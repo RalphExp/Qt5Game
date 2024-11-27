@@ -26,10 +26,12 @@ CONFIG += c++17
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+    minewidget.cpp
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+    minewidget.h
 
 FORMS += \
         mainwindow.ui
