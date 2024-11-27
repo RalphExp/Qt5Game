@@ -24,6 +24,12 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::resizeEvent(QResizeEvent *e) {
+    cerr << "Resize: (" << e->size().width()
+         << "," << e->size().height()
+         << ")" << endl;
+
+    auto size = e->size();
+
     QMainWindow::resizeEvent(e);
 }
 

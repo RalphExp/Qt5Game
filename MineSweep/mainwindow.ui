@@ -18,17 +18,17 @@
     <item row="0" column="0">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="page">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -55,7 +55,7 @@
         <item row="1" column="0">
          <widget class="QPushButton" name="hard">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -65,6 +65,12 @@
             <width>160</width>
             <height>160</height>
            </size>
+          </property>
+          <property name="font">
+           <font>
+            <weight>50</weight>
+            <bold>false</bold>
+           </font>
           </property>
           <property name="text">
            <string>30 x 16
@@ -75,7 +81,7 @@
         <item row="1" column="1">
          <widget class="QPushButton" name="custom">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -85,6 +91,12 @@
             <width>160</width>
             <height>160</height>
            </size>
+          </property>
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
           </property>
           <property name="text">
            <string>?
@@ -95,7 +107,7 @@ Custom</string>
         <item row="0" column="1">
          <widget class="QPushButton" name="medium">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -105,6 +117,12 @@ Custom</string>
             <width>160</width>
             <height>160</height>
            </size>
+          </property>
+          <property name="font">
+           <font>
+            <weight>50</weight>
+            <bold>false</bold>
+           </font>
           </property>
           <property name="text">
            <string>16 x 16
@@ -115,7 +133,7 @@ Custom</string>
         <item row="0" column="0">
          <widget class="QPushButton" name="simple">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -125,6 +143,12 @@ Custom</string>
             <width>160</width>
             <height>160</height>
            </size>
+          </property>
+          <property name="font">
+           <font>
+            <weight>50</weight>
+            <bold>false</bold>
+           </font>
           </property>
           <property name="text">
            <string>8 x 8
@@ -210,7 +234,7 @@ Custom</string>
              <property name="minimumSize">
               <size>
                <width>0</width>
-               <height>56</height>
+               <height>48</height>
               </size>
              </property>
              <property name="text">
@@ -229,7 +253,7 @@ Custom</string>
              <property name="minimumSize">
               <size>
                <width>0</width>
-               <height>56</height>
+               <height>48</height>
               </size>
              </property>
              <property name="text">
@@ -248,7 +272,7 @@ Custom</string>
              <property name="minimumSize">
               <size>
                <width>150</width>
-               <height>56</height>
+               <height>48</height>
               </size>
              </property>
              <property name="mouseTracking">
@@ -266,7 +290,7 @@ Custom</string>
       </widget>
       <widget class="QWidget" name="page3">
        <layout class="QGridLayout" name="gridLayout_3">
-        <item row="1" column="0">
+        <item row="2" column="0">
          <widget class="QFrame" name="frame">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -277,7 +301,7 @@ Custom</string>
           <property name="minimumSize">
            <size>
             <width>300</width>
-            <height>200</height>
+            <height>224</height>
            </size>
           </property>
           <property name="frameShape">
@@ -286,76 +310,75 @@ Custom</string>
           <property name="frameShadow">
            <enum>QFrame::Raised</enum>
           </property>
-          <widget class="QPushButton" name="pushButton">
+          <widget class="QPushButton" name="playGame">
            <property name="geometry">
             <rect>
              <x>40</x>
-             <y>130</y>
+             <y>110</y>
              <width>221</width>
-             <height>25</height>
+             <height>40</height>
             </rect>
            </property>
-           <property name="text">
-            <string>PushButton</string>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>40</height>
+            </size>
            </property>
-          </widget>
-          <widget class="QPushButton" name="pushButton_2">
-           <property name="geometry">
-            <rect>
-             <x>40</x>
-             <y>160</y>
-             <width>221</width>
-             <height>25</height>
-            </rect>
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+  background-color: green;
+  color: white
+}</string>
            </property>
            <property name="text">
-            <string>PushButton</string>
+            <string>Play Game</string>
            </property>
           </widget>
           <widget class="QLabel" name="label">
            <property name="geometry">
             <rect>
              <x>40</x>
-             <y>50</y>
+             <y>40</y>
              <width>67</width>
              <height>31</height>
             </rect>
            </property>
            <property name="text">
-            <string>TextLabel</string>
+            <string>Height</string>
            </property>
           </widget>
           <widget class="QLabel" name="label_2">
            <property name="geometry">
             <rect>
              <x>40</x>
-             <y>80</y>
-             <width>67</width>
+             <y>70</y>
+             <width>101</width>
              <height>31</height>
             </rect>
            </property>
            <property name="text">
-            <string>TextLabel</string>
+            <string>Percent mines</string>
            </property>
           </widget>
           <widget class="QLabel" name="label_3">
            <property name="geometry">
             <rect>
              <x>40</x>
-             <y>20</y>
+             <y>10</y>
              <width>67</width>
              <height>31</height>
             </rect>
            </property>
            <property name="text">
-            <string>TextLabel</string>
+            <string>Width</string>
            </property>
           </widget>
           <widget class="QSpinBox" name="spinBox">
            <property name="geometry">
             <rect>
              <x>160</x>
-             <y>20</y>
+             <y>10</y>
              <width>101</width>
              <height>26</height>
             </rect>
@@ -365,7 +388,7 @@ Custom</string>
            <property name="geometry">
             <rect>
              <x>160</x>
-             <y>50</y>
+             <y>40</y>
              <width>101</width>
              <height>26</height>
             </rect>
@@ -375,10 +398,23 @@ Custom</string>
            <property name="geometry">
             <rect>
              <x>160</x>
-             <y>80</y>
+             <y>70</y>
              <width>101</width>
              <height>26</height>
             </rect>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="cancel">
+           <property name="geometry">
+            <rect>
+             <x>39</x>
+             <y>160</y>
+             <width>221</width>
+             <height>41</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Cancel</string>
            </property>
           </widget>
          </widget>
