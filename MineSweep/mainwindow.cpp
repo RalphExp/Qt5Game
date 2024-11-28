@@ -33,7 +33,7 @@ void MainWindow::resizeEvent(QResizeEvent *e) {
 
 void MainWindow::restart(void) {
     ui_->stackedWidget->setCurrentIndex(0);
-    setFixedSize(width_, height_);
+     setFixedSize(width_, height_);
 }
 
 void MainWindow::startSimple(void) {
