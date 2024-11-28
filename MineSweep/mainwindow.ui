@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>538</width>
-    <height>408</height>
+    <height>386</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,7 +24,7 @@
        </sizepolicy>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="page">
        <property name="sizePolicy">
@@ -191,11 +191,11 @@ Custom</string>
             <number>0</number>
            </property>
            <item>
-            <widget class="QLabel" name="flags">
+            <widget class="QLabel" name="label_4">
              <property name="minimumSize">
               <size>
                <width>0</width>
-               <height>60</height>
+               <height>40</height>
               </size>
              </property>
              <property name="text">
@@ -204,11 +204,11 @@ Custom</string>
             </widget>
            </item>
            <item>
-            <widget class="QLabel" name="time">
+            <widget class="QLabel" name="label_5">
              <property name="minimumSize">
               <size>
                <width>0</width>
-               <height>60</height>
+               <height>40</height>
               </size>
              </property>
              <property name="text">
@@ -240,7 +240,7 @@ Custom</string>
              <property name="minimumSize">
               <size>
                <width>0</width>
-               <height>40</height>
+               <height>36</height>
               </size>
              </property>
              <property name="text">
@@ -259,7 +259,7 @@ Custom</string>
              <property name="minimumSize">
               <size>
                <width>0</width>
-               <height>40</height>
+               <height>36</height>
               </size>
              </property>
              <property name="text">
@@ -278,7 +278,7 @@ Custom</string>
              <property name="minimumSize">
               <size>
                <width>150</width>
-               <height>40</height>
+               <height>36</height>
               </size>
              </property>
              <property name="mouseTracking">
@@ -430,16 +430,6 @@ Custom</string>
      </widget>
     </item>
    </layout>
-  </widget>
-  <widget class="QMenuBar" name="menuBar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>538</width>
-     <height>22</height>
-    </rect>
-   </property>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

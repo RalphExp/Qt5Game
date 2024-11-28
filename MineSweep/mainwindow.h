@@ -25,6 +25,8 @@ private slots:
     void startCustom(void);
 
 private:
+    int width_;
+    int height_;
     Ui::MainWindow *ui_;
 };
 
