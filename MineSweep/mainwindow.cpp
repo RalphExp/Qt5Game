@@ -13,6 +13,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     setWindowTitle(tr("Mines"));
     connect(ui_->changeLevel, &QPushButton::clicked, this, &MainWindow::restart);
+    connect(ui_->cancel, &QPushButton::clicked, this, &MainWindow::restart);
+
     connect(ui_->simple, &QPushButton::clicked, this, &MainWindow::startSimple);
     connect(ui_->simple, &QPushButton::clicked, this, &MainWindow::startMedium);
     connect(ui_->simple, &QPushButton::clicked, this, &MainWindow::startHard);
