@@ -1,8 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include <iostream>
 #include <QResizeEvent>
+#include <QDebug>
 
 using namespace std;
 
@@ -11,6 +11,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui_->setupUi(this);
 
     setWindowTitle(tr("Mines"));
+    setMouseTracking(true);
+
     connect(ui_->changeLevel, &QPushButton::clicked, this, &MainWindow::restart);
     connect(ui_->cancel, &QPushButton::clicked, this, &MainWindow::restart);
 

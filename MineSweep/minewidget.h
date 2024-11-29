@@ -15,8 +15,8 @@ Q_OBJECT
 
 public:
     enum State {
-        kHide = 0,
-        kBlank = 1,
+        kNormal = 0,
+        kPressed = 1,
         kMine = 2,
         kRedmine = 3,
         kFlag = 4,
@@ -27,9 +27,8 @@ public:
 
     explicit MineWidget(QWidget *parent = nullptr);
     void start(int width, int height, int mines);
-
-protected:
     void paintEvent(QPaintEvent* event) override;
+    void leaveEvent(QEvent* event) override;
     void mouseMoveEvent(QMouseEvent* event) override;
 
 private:
@@ -45,8 +44,8 @@ private:
     int height_;
     int mines_;
     int percent_;
-    int mouseX_;
-    int mouseY_;
+    int mouseX_; // last mouse x position in grid coordinate
+    int mouseY_; // last mouse y position in grid coordinate
     vector<vector<int>> state_;
     vector<vector<bool>> board_;
 };
