@@ -36,6 +36,14 @@ void MineWidget::drawGrid(QPainter& painter, int x, int y) {
         painter.setBrush(Qt::lightGray);
         painter.drawRoundRect(x*gsize_+2, y*gsize_+2, gsize_-2, gsize_-2, 16, 16);
         break;
+    case kFlag:
+        break;
+    case kMine:
+        break;
+    case kRedmine:
+        break;
+    default:
+        break;
     }
 }
 
@@ -46,24 +54,22 @@ void MineWidget::paintEvent(QPaintEvent* e) {
     QRect rc = e->rect();
     qDebug() << "rect" << rc;
 
-    // TODO: optimized update
+    int bx = rc.x() / gsize_;
+    int by = rc.y() / gsize_;
+    int ex = (rc.x() + rc.width()) / gsize_;
+    int ey = (rc.y() + rc.height()) / gsize_;
 
-    for (int y = 0; y < static_cast<int>(board_.size()); ++y) {
-        for (int x = 0; x < static_cast<int>(board_[0].size()); ++x) {
+    bx = min(max(0, bx), width_-1);
+    ex = min(max(0, ex), width_-1);
+
+    by = min(max(0, by), height_-1);
+    ey = min(max(0, ey), height_-1);
+
+    for (int y = by; y < ey+1; ++y) {
+        for (int x = bx; x < ex+1; ++x) {
             drawGrid(painter, x, y);
         }
     }
-}
-
-void MineWidget::leaveEvent(QEvent*) {
-    // qDebug() << "leave";
-
-    if (mouseX_ >= 0 && mouseX_ < width_ && mouseY_ >= 0 && mouseY_ < height_) {
-        state_[size_t(mouseY_)][size_t(mouseX_)] = kNormal;
-    }
-    mouseX_ = -1;
-    mouseY_ = -1;
-    update();
 }
 
 void MineWidget::mouseMoveEvent(QMouseEvent* event) {
@@ -84,9 +90,27 @@ void MineWidget::mouseMoveEvent(QMouseEvent* event) {
         state_[size_t(gy)][size_t(gx)] = kPressed;
         update(QRect(gx*gsize_, gy*gsize_, gsize_, gsize_));
     }
+
+    // note that the update rect will be combined.
     mouseX_ = gx;
     mouseY_ = gy;
 }
+
+void MineWidget::mousePressEvent(QMouseEvent* event) {
+
+}
+
+void MineWidget::leaveEvent(QEvent*) {
+    // qDebug() << "leave";
+
+    if (mouseX_ >= 0 && mouseX_ < width_ && mouseY_ >= 0 && mouseY_ < height_) {
+        state_[size_t(mouseY_)][size_t(mouseX_)] = kNormal;
+    }
+    mouseX_ = -1;
+    mouseY_ = -1;
+    update();
+}
+
 
 
 

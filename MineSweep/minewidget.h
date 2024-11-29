@@ -28,8 +28,9 @@ public:
     explicit MineWidget(QWidget *parent = nullptr);
     void start(int width, int height, int mines);
     void paintEvent(QPaintEvent* event) override;
-    void leaveEvent(QEvent* event) override;
     void mouseMoveEvent(QMouseEvent* event) override;
+    void mousePressEvent(QMouseEvent* event) override;
+    void leaveEvent(QEvent* event) override;
 
 private:
     void drawGrid(QPainter& painter, int x, int y);
