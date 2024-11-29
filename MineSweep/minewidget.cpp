@@ -43,6 +43,18 @@ void MineWidget::paintEvent(QPaintEvent* e) {
     QPainter painter(this);
     painter.setPen(Qt::NoPen);
 
+    QRect rc = e->rect();
+    if (rc.size() == QSize(gsize_, gsize_)) {
+        if (rc.x() % gsize_ == 0 && rc.y() % gsize_ == 0) {
+            int gx = rc.x() / gsize_;
+            int gy = rc.y() / gsize_;
+            if (gx >= 0 && gx < width_ && gy >= 0 && gy < height_) {
+                drawGrid(painter, gx, gy);
+                return;
+            }
+        }
+    }
+
     for (int y = 0; y < static_cast<int>(board_.size()); ++y) {
         for (int x = 0; x < static_cast<int>(board_[0].size()); ++x) {
             drawGrid(painter, x, y);
@@ -71,16 +83,16 @@ void MineWidget::mouseMoveEvent(QMouseEvent* event) {
     // restore old grid
     if (mouseX_ >= 0 && mouseX_ < width_ && mouseY_ >= 0 && mouseY_ < height_) {
         state_[size_t(mouseY_)][size_t(mouseX_)] = kNormal;
+        update(QRect(mouseX_*gsize_, mouseY_*gsize_, gsize_, gsize_));
     }
 
     // draw new grid
     if (gx >= 0 && gx < width_ && gy >= 0 && gy < height_) {
         state_[size_t(gy)][size_t(gx)] = kPressed;
+        update(QRect(gx*gsize_, gy*gsize_, gsize_, gsize_));
     }
-
     mouseX_ = gx;
     mouseY_ = gy;
-    update();
 }
 
 
