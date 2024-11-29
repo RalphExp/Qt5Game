@@ -97,7 +97,7 @@ void MineWidget::mouseMoveEvent(QMouseEvent* event) {
 }
 
 void MineWidget::mousePressEvent(QMouseEvent* event) {
-
+    (void)event;
 }
 
 void MineWidget::leaveEvent(QEvent*) {
@@ -106,9 +106,10 @@ void MineWidget::leaveEvent(QEvent*) {
     if (mouseX_ >= 0 && mouseX_ < width_ && mouseY_ >= 0 && mouseY_ < height_) {
         state_[size_t(mouseY_)][size_t(mouseX_)] = kNormal;
     }
+
+    update(QRect(mouseX_*gsize_, mouseY_*gsize_, gsize_, gsize_));
     mouseX_ = -1;
     mouseY_ = -1;
-    update();
 }
 
 

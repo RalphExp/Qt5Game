@@ -46,7 +46,7 @@ void MainWindow::startMedium(void) {
 
 void MainWindow::startHard(void) {
     ui_->stackedWidget->setCurrentIndex(1);
-    ui_->mineWidget->start(16, 30, 99);
+    ui_->mineWidget->start(30, 16, 99);
 }
 
 void MainWindow::startCustom(void) {
