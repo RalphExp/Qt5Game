@@ -44,16 +44,9 @@ void MineWidget::paintEvent(QPaintEvent* e) {
     painter.setPen(Qt::NoPen);
 
     QRect rc = e->rect();
-    if (rc.size() == QSize(gsize_, gsize_)) {
-        if (rc.x() % gsize_ == 0 && rc.y() % gsize_ == 0) {
-            int gx = rc.x() / gsize_;
-            int gy = rc.y() / gsize_;
-            if (gx >= 0 && gx < width_ && gy >= 0 && gy < height_) {
-                drawGrid(painter, gx, gy);
-                return;
-            }
-        }
-    }
+    qDebug() << "rect" << rc;
+
+    // TODO: optimized update
 
     for (int y = 0; y < static_cast<int>(board_.size()); ++y) {
         for (int x = 0; x < static_cast<int>(board_[0].size()); ++x) {
