@@ -14,15 +14,21 @@ class MineWidget : public QWidget
 Q_OBJECT
 
 public:
-    enum State {
+    enum GameState {
+        kNotStarted = 0,
+        kStarted = 1,
+        kEnded = 2
+    };
+
+    enum GridState {
         kNormal = 0,
         kPressed = 1,
         kMine = 2,
-        kRedmine = 3,
+        kExploded = 3,
         kFlag = 4,
         kQuestion = 5,
         kNumber = 6,
-        kEnd = kNumber+7
+        kStateEnd = kNumber+7
     };
 
     explicit MineWidget(QWidget *parent = nullptr);
@@ -34,6 +40,14 @@ public:
 
 private:
     void drawGrid(QPainter& painter, int x, int y);
+    void drawNormal(QPainter& painter, int x, int y);
+    void drawPressed(QPainter& painter, int x, int y);
+    void drawFlag(QPainter& painter, int x, int y);
+    void drawClock(QPainter& painter, int x, int y);
+    void drawQuestion(QPainter& painter, int x, int y);
+    void drawMine(QPainter& painter, int x, int y);
+    void drawExploded(QPainter& painter, int x, int y);
+    void drawNumber(QPainter& painter, int x, int y, int n);
 
 signals:
 
@@ -47,8 +61,9 @@ private:
     int percent_;
     int mouseX_; // last mouse x position in grid coordinate
     int mouseY_; // last mouse y position in grid coordinate
-    vector<vector<int>> state_;
+    int gameState_; // game state
     vector<vector<bool>> board_;
+    vector<vector<int>> state_;
 };
 
 #endif // MINEWIDGET_H
