@@ -45,29 +45,37 @@ void MineWidget::drawFlag(QPainter& painter, int x, int y) {
     painter.setBrush(Qt::gray);
     painter.setRenderHint(QPainter::Antialiasing);
     painter.drawRoundRect(rect, 16, 16);
-    painter.setPen(Qt::black);
+
+    painter.setBrush(Qt::red);
+    QPoint points[3] = {
+        QPoint(x*gsize_+4+(gsize_-4)*4/16, y*gsize_+4+(gsize_-4)*3/16),
+        QPoint(x*gsize_+4+(gsize_-4)*13/16, y*gsize_+4+(gsize_-4)*6/16),
+        QPoint(x*gsize_+4+(gsize_-4)*4/16, y*gsize_+4+(gsize_-4)*9/16)
+    };
+    painter.drawPolygon(points, 3);
 
     /* draw pole*/
     QPen pen;
     pen.setColor(QColor("#000000"));
     pen.setWidth(gsize_/10);
     painter.setPen(pen);
-    painter.setBrush(Qt::black);
+    painter.setBrush(Qt::red);
     painter.drawLine(x*gsize_+4+(gsize_-4)*4/16,
                      y*gsize_+4+(gsize_-4)*3/16,
                      x*gsize_+4+(gsize_-4)*4/16,
                      y*gsize_+4+(gsize_-4)*13/16);
-
-    QPoint points[3] = {
-        QPoint(x*gsize_+4+(gsize_-4)*4/16, y*gsize_+4+(gsize_-4)*3/16),
-        QPoint(x*gsize_+4+(gsize_-4)*12/16, y*gsize_+4+(gsize_-4)*6/16),
-        QPoint(x*gsize_+4+(gsize_-4)*4/16, y*gsize_+4+(gsize_-4)*9/16)
-    };
-    painter.drawPolygon(points, 3);
 }
 
 void MineWidget::drawQuestion(QPainter& painter, int x, int y) {
+    drawFlag(painter, x, y);
+    QRect rect(x*gsize_+gsize_/2, y*gsize_+gsize_/2, gsize_/2, gsize_/2);
+    QFont font = painter.font();
+    font.setPointSize(gsize_/4);
+    font.setBold(true);
 
+    painter.setFont(font);
+    painter.setPen(Qt::black);
+    painter.drawText(rect, Qt::AlignCenter, QString("?"));
 }
 
 void MineWidget::drawNumber(QPainter& painter, int x, int y, int n) {
@@ -98,6 +106,9 @@ void MineWidget::drawGrid(QPainter& painter, int x, int y) {
         break;
     case kFlag:
         drawFlag(painter, x, y);
+        break;
+    case kQuestion:
+        drawQuestion(painter, x, y);
         break;
     case kMine:
         break;
