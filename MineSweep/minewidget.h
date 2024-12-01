@@ -22,13 +22,13 @@ public:
 
     enum GridState {
         kNormal = 0,
-        kPressed = 1,
-        kMine = 2,
-        kExploded = 3,
-        kFlag = 4,
-        kQuestion = 5,
-        kNumber = 6,
-        kStateEnd = kNumber+7
+        kNumber = 1,
+        kPressed = 9,
+        kMine = 10,
+        kExploded = 11,
+        kFlag = 12,
+        kErrFlag = 13,
+        kQuestion = 14,
     };
 
     explicit MineWidget(QWidget *parent = nullptr);
@@ -43,6 +43,7 @@ private:
     void drawNormal(QPainter& painter, int x, int y);
     void drawPressed(QPainter& painter, int x, int y);
     void drawFlag(QPainter& painter, int x, int y);
+    void drawFlag(QPainter& painter, const QRect& rect);
     void drawClock(QPainter& painter, int x, int y);
     void drawQuestion(QPainter& painter, int x, int y);
     void drawMine(QPainter& painter, int x, int y);

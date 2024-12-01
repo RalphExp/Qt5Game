@@ -40,7 +40,30 @@ void MineWidget::drawPressed(QPainter& painter, int x, int y) {
 }
 
 void MineWidget::drawFlag(QPainter& painter, int x, int y) {
+    QRect rect(x*gsize_+4, y*gsize_+4, gsize_-4, gsize_-4);
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(Qt::gray);
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.drawRoundRect(rect, 16, 16);
+    painter.setPen(Qt::black);
 
+    /* draw pole*/
+    QPen pen;
+    pen.setColor(QColor("#000000"));
+    pen.setWidth(gsize_/10);
+    painter.setPen(pen);
+    painter.setBrush(Qt::black);
+    painter.drawLine(x*gsize_+4+(gsize_-4)*4/16,
+                     y*gsize_+4+(gsize_-4)*3/16,
+                     x*gsize_+4+(gsize_-4)*4/16,
+                     y*gsize_+4+(gsize_-4)*13/16);
+
+    QPoint points[3] = {
+        QPoint(x*gsize_+4+(gsize_-4)*4/16, y*gsize_+4+(gsize_-4)*3/16),
+        QPoint(x*gsize_+4+(gsize_-4)*12/16, y*gsize_+4+(gsize_-4)*6/16),
+        QPoint(x*gsize_+4+(gsize_-4)*4/16, y*gsize_+4+(gsize_-4)*9/16)
+    };
+    painter.drawPolygon(points, 3);
 }
 
 void MineWidget::drawQuestion(QPainter& painter, int x, int y) {
@@ -48,10 +71,24 @@ void MineWidget::drawQuestion(QPainter& painter, int x, int y) {
 }
 
 void MineWidget::drawNumber(QPainter& painter, int x, int y, int n) {
+    static QColor colors[8] = {QColor("#e0ffe0"),};
 
+    QRect rect(x*gsize_+4, y*gsize_+4, gsize_-4, gsize_-4);
+    QFont font = painter.font();
+    font.setPointSize(gsize_/2);
+    font.setBold(true);
+
+    painter.setFont(font);
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(QBrush(colors[n-1]));
+    painter.drawRoundRect(rect, 16, 16);
+    painter.setPen(Qt::black);
+    painter.drawText(rect, Qt::AlignCenter, QString('0'+n));
 }
 
 void MineWidget::drawGrid(QPainter& painter, int x, int y) {
+    qDebug() << "(" << x << "," << y << ") state: " << state_[size_t(y)][size_t(x)];
+
     switch (state_[size_t(y)][size_t(x)]) {
     case kNormal:
         drawNormal(painter, x, y);
@@ -60,18 +97,19 @@ void MineWidget::drawGrid(QPainter& painter, int x, int y) {
         drawPressed(painter, x, y);
         break;
     case kFlag:
+        drawFlag(painter, x, y);
         break;
     case kMine:
         break;
     case kExploded:
         break;
-    case kNumber:   // fall through
-    case kNumber+1: // fall through
-    case kNumber+2: // fall through
-    case kNumber+3: // fall through
-    case kNumber+4: // fall through
-    case kNumber+5: // fall through
-    case kNumber+6: // fall through
+    case kNumber:   // fall through to kNumber+7
+    case kNumber+1:
+    case kNumber+2:
+    case kNumber+3:
+    case kNumber+4:
+    case kNumber+5:
+    case kNumber+6:
     case kNumber+7:
         drawNumber(painter, x, y, state_[size_t(y)][size_t(x)]-kNumber+1);
         break;
@@ -113,8 +151,10 @@ void MineWidget::mouseMoveEvent(QMouseEvent* event) {
 
     // restore old grid
     if (mouseX_ >= 0 && mouseX_ < width_ && mouseY_ >= 0 && mouseY_ < height_) {
-        state_[size_t(mouseY_)][size_t(mouseX_)] = kNormal;
-        update(QRect(mouseX_*gsize_, mouseY_*gsize_, gsize_, gsize_));
+        if (state_[size_t(mouseY_)][size_t(mouseX_)] == kPressed) {
+            state_[size_t(mouseY_)][size_t(mouseX_)] = kNormal;
+            update(QRect(mouseX_*gsize_, mouseY_*gsize_, gsize_, gsize_));
+        }
     }
 
     // draw new grid
@@ -135,13 +175,15 @@ void MineWidget::mousePressEvent(QMouseEvent* event) {
     if (gx < 0 || gx >= width_ || gy < 0 || gy > height_)
         return;
 
-    if (event->button() & Qt::MouseButton::RightButton) {
-        if (gameState_ != kStarted)
-            return;
+    if (event->button() & Qt::RightButton) {
+        // if (gameState_ != kStarted)
+        //     return;
+        qDebug() << "MouseEvent: " << event->button();
 
         bool needUpdate = true;
         switch (state_[size_t(gy)][size_t(gx)]) {
-        case kNormal:
+        case kNormal: // fall through
+        case kPressed:
             state_[size_t(gy)][size_t(gx)] = kFlag;
             break;
         case kFlag:
@@ -155,19 +197,22 @@ void MineWidget::mousePressEvent(QMouseEvent* event) {
             break;
         }
         if (needUpdate) {
+            qDebug() << "update mouse click";
             update(QRect(gx*gsize_, gy*gsize_, gsize_, gsize_));
         }
     } else {
-
+        state_[size_t(gy)][size_t(gx)] = kNumber;
+        update(QRect(gx*gsize_, gy*gsize_, gsize_, gsize_));
     }
 }
 
 void MineWidget::leaveEvent(QEvent*) {
     if (mouseX_ >= 0 && mouseX_ < width_ && mouseY_ >= 0 && mouseY_ < height_) {
-        state_[size_t(mouseY_)][size_t(mouseX_)] = kNormal;
+        if (state_[size_t(mouseY_)][size_t(mouseX_)] == kPressed) {
+            state_[size_t(mouseY_)][size_t(mouseX_)] = kNormal;
+            update(QRect(mouseX_*gsize_, mouseY_*gsize_, gsize_, gsize_));
+        }
     }
-
-    update(QRect(mouseX_*gsize_, mouseY_*gsize_, gsize_, gsize_));
     mouseX_ = -1;
     mouseY_ = -1;
 }
