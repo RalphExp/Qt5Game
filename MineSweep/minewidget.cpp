@@ -5,8 +5,8 @@
 #include <QDebug>
 
 MineWidget::MineWidget(QWidget *parent) : QWidget(parent),
-    gsize_(32), mouseX_(-1), mouseY_(-1), state_(),
-    gameState_(kNotStarted) {
+    gsize_(32), mouseX_(-1), mouseY_(-1), gameState_(kNotStarted),
+    state_() {
 
     setMouseTracking(true);
 }
@@ -27,16 +27,24 @@ void MineWidget::start(int width, int height, int mines) {
     resize(width_*gsize_, height_*gsize_);
 }
 
+void MineWidget::startBoard(int x, int y) {
+
+}
+
 void MineWidget::drawNormal(QPainter& painter, int x, int y) {
     painter.setPen(Qt::NoPen);
     painter.setBrush(Qt::gray);
     painter.drawRoundRect(x*gsize_+4, y*gsize_+4, gsize_-4, gsize_-4, 16, 16);
 }
 
-void MineWidget::drawPressed(QPainter& painter, int x, int y) {
+void MineWidget::drawNull(QPainter& painter, int x, int y) {
     painter.setPen(Qt::NoPen);
     painter.setBrush(Qt::lightGray);
     painter.drawRoundRect(x*gsize_+4, y*gsize_+4, gsize_-4, gsize_-4, 16, 16);
+}
+
+void MineWidget::drawPressed(QPainter& painter, int x, int y) {
+    return;
 }
 
 void MineWidget::drawFlag(QPainter& painter, int x, int y) {
@@ -101,8 +109,8 @@ void MineWidget::drawGrid(QPainter& painter, int x, int y) {
     case kNormal:
         drawNormal(painter, x, y);
         break;
-    case kPressed:
-        drawPressed(painter, x, y);
+    case kNull:
+        drawNull(painter, x, y);
         break;
     case kFlag:
         drawFlag(painter, x, y);
@@ -162,7 +170,7 @@ void MineWidget::mouseMoveEvent(QMouseEvent* event) {
 
     // restore old grid
     if (mouseX_ >= 0 && mouseX_ < width_ && mouseY_ >= 0 && mouseY_ < height_) {
-        if (state_[size_t(mouseY_)][size_t(mouseX_)] == kPressed) {
+        if (state_[size_t(mouseY_)][size_t(mouseX_)] == kNull) {
             state_[size_t(mouseY_)][size_t(mouseX_)] = kNormal;
             update(QRect(mouseX_*gsize_, mouseY_*gsize_, gsize_, gsize_));
         }
@@ -170,7 +178,7 @@ void MineWidget::mouseMoveEvent(QMouseEvent* event) {
 
     // draw new grid
     if (gx >= 0 && gx < width_ && gy >= 0 && gy < height_) {
-        state_[size_t(gy)][size_t(gx)] = kPressed;
+        state_[size_t(gy)][size_t(gx)] = kNull;
         update(QRect(gx*gsize_, gy*gsize_, gsize_, gsize_));
     }
 
@@ -179,7 +187,11 @@ void MineWidget::mouseMoveEvent(QMouseEvent* event) {
     mouseY_ = gy;
 }
 
-void MineWidget::mousePressEvent(QMouseEvent* event) {
+void MineWidget::mousePressEvent(QMouseEvent *event) {
+    /* NotImplemented */
+}
+
+void MineWidget::mouseReleaseEvent(QMouseEvent *event) {
     int gx = event->x() / gsize_;
     int gy = event->y() / gsize_;
 
@@ -194,7 +206,7 @@ void MineWidget::mousePressEvent(QMouseEvent* event) {
         bool needUpdate = true;
         switch (state_[size_t(gy)][size_t(gx)]) {
         case kNormal: // fall through
-        case kPressed:
+        case kNull:
             state_[size_t(gy)][size_t(gx)] = kFlag;
             break;
         case kFlag:
@@ -219,7 +231,7 @@ void MineWidget::mousePressEvent(QMouseEvent* event) {
 
 void MineWidget::leaveEvent(QEvent*) {
     if (mouseX_ >= 0 && mouseX_ < width_ && mouseY_ >= 0 && mouseY_ < height_) {
-        if (state_[size_t(mouseY_)][size_t(mouseX_)] == kPressed) {
+        if (state_[size_t(mouseY_)][size_t(mouseX_)] == kNull) {
             state_[size_t(mouseY_)][size_t(mouseX_)] = kNormal;
             update(QRect(mouseX_*gsize_, mouseY_*gsize_, gsize_, gsize_));
         }

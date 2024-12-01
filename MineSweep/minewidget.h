@@ -23,24 +23,28 @@ public:
     enum GridState {
         kNormal = 0,
         kNumber = 1,
-        kPressed = 9,
+        kNull = 9,
         kMine = 10,
         kExploded = 11,
         kFlag = 12,
         kErrFlag = 13,
         kQuestion = 14,
+        kPressed = 32
     };
 
     explicit MineWidget(QWidget *parent = nullptr);
     void start(int width, int height, int mines);
-    void paintEvent(QPaintEvent* event) override;
-    void mouseMoveEvent(QMouseEvent* event) override;
-    void mousePressEvent(QMouseEvent* event) override;
-    void leaveEvent(QEvent* event) override;
+    void startBoard(int x, int y);
+    virtual void paintEvent(QPaintEvent* event) override;
+    virtual void mouseMoveEvent(QMouseEvent* event) override;
+    virtual void mouseReleaseEvent(QMouseEvent *event) override;
+    virtual void mousePressEvent(QMouseEvent* event) override;
+    virtual void leaveEvent(QEvent* event) override;
 
 private:
     void drawGrid(QPainter& painter, int x, int y);
     void drawNormal(QPainter& painter, int x, int y);
+    void drawNull(QPainter& painter, int x, int y);
     void drawPressed(QPainter& painter, int x, int y);
     void drawFlag(QPainter& painter, int x, int y);
     void drawFlag(QPainter& painter, const QRect& rect);
