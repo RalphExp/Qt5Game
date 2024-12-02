@@ -28,7 +28,19 @@ void MineWidget::start(int width, int height, int mines) {
 }
 
 void MineWidget::startBoard(int x, int y) {
+    // (x,y) will never be a mine
+    vector<size_t> v(size_t(width_*height_));
+    for (size_t i = 0; i < v.size(); ++i)
+        v[i] = i;
 
+    swap(v[size_t(y*height_+x)], v[v.size()-1]);
+    for (int i = 0; i < mines_; ++i) {
+        int r = random() % (v.size()-i-1);
+        swap(v[r], v[v.size()-2-i]);
+        int y = r / height_;
+        int x = r % width_;
+        board_[y][x] = true;
+    }
 }
 
 void MineWidget::drawNormal(QPainter& painter, int x, int y) {
