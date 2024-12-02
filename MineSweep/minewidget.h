@@ -34,7 +34,7 @@ public:
 
     explicit MineWidget(QWidget *parent = nullptr);
     void start(int width, int height, int mines);
-    void startBoard(int x, int y);
+
     virtual void paintEvent(QPaintEvent* event) override;
     virtual void mouseMoveEvent(QMouseEvent* event) override;
     virtual void mouseReleaseEvent(QMouseEvent *event) override;
@@ -42,6 +42,10 @@ public:
     virtual void leaveEvent(QEvent* event) override;
 
 private:
+    void startBoard(int x, int y);
+    void openBoard(int x, int y);
+    int countMines(int x, int y);
+
     void drawGrid(QPainter& painter, int x, int y);
     void drawNormal(QPainter& painter, int x, int y);
     void drawNull(QPainter& painter, int x, int y);

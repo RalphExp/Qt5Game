@@ -1,5 +1,7 @@
 #include "minewidget.h"
 
+#include <cassert>
+
 #include <QPainter>
 #include <QLayout>
 #include <QDebug>
@@ -11,20 +13,30 @@ MineWidget::MineWidget(QWidget *parent) : QWidget(parent),
     setMouseTracking(true);
 }
 
-void MineWidget::start(int width, int height, int mines) {
-    width_ = width;
-    height_ = height;
-    mines_ = mines;
+int MineWidget::countMines(int x, int y) {
+    assert(board_[y][x] == false);
+    int count = 0;
+    if (x > 0 && board_[y][x-1])
+        ++count;
+    if (x < width_-1 && board_[y][x+1])
+        ++count;
+    if (y > 0 && board_[y-1][x])
+        ++count;
+    if (y < height_ && board_[y+1][x])
+        ++count;
+    if (x > 0 && y > 0 && board_[y-1][x-1])
+        ++count;
+    if (x > 0 && y < height_-1 && board_[y+1][x-1])
+        ++count;
+    if (x < width_-1 && y > 0 && board_[y-1][x+1])
+        ++count;
+    if (x < width_-1 && y < height_-1 && board_[y+1][x+1])
+        ++count;
+    return count;
+}
 
-    board_ = vector<vector<bool>>(
-        static_cast<size_t>(height),
-        vector<bool>(static_cast<size_t>(width), 0));
+void MineWidget::openBoard(int x, int y) {
 
-    state_ = vector<vector<int>>(
-        static_cast<size_t>(height),
-        vector<int>(static_cast<size_t>(width), 0));
-
-    resize(width_*gsize_, height_*gsize_);
 }
 
 void MineWidget::startBoard(int x, int y) {
@@ -41,6 +53,24 @@ void MineWidget::startBoard(int x, int y) {
         int x = r % width_;
         board_[y][x] = true;
     }
+
+    openBoard(x, y);
+}
+
+void MineWidget::start(int width, int height, int mines) {
+    width_ = width;
+    height_ = height;
+    mines_ = mines;
+
+    board_ = vector<vector<bool>>(
+        static_cast<size_t>(height),
+        vector<bool>(static_cast<size_t>(width), 0));
+
+    state_ = vector<vector<int>>(
+        static_cast<size_t>(height),
+        vector<int>(static_cast<size_t>(width), 0));
+
+    resize(width_*gsize_, height_*gsize_);
 }
 
 void MineWidget::drawNormal(QPainter& painter, int x, int y) {
@@ -174,10 +204,10 @@ void MineWidget::paintEvent(QPaintEvent* e) {
 }
 
 void MineWidget::mouseMoveEvent(QMouseEvent* event) {
-    int gx = event->x() / gsize_;
-    int gy = event->y() / gsize_;
+    int x = event->x() / gsize_;
+    int y = event->y() / gsize_;
 
-    if (gx == mouseX_ && gy == mouseY_)
+    if (x == mouseX_ && y == mouseY_)
         return;
 
     // restore old grid
@@ -189,14 +219,14 @@ void MineWidget::mouseMoveEvent(QMouseEvent* event) {
     }
 
     // draw new grid
-    if (gx >= 0 && gx < width_ && gy >= 0 && gy < height_) {
-        state_[size_t(gy)][size_t(gx)] = kNull;
-        update(QRect(gx*gsize_, gy*gsize_, gsize_, gsize_));
+    if (x >= 0 && x < width_ && y >= 0 && y < height_) {
+        state_[y][x] = kNull;
+        update(QRect(x*gsize_, y*gsize_, gsize_, gsize_));
     }
 
     // note that the update rect will be combined.
-    mouseX_ = gx;
-    mouseY_ = gy;
+    mouseX_ = x;
+    mouseY_ = y;
 }
 
 void MineWidget::mousePressEvent(QMouseEvent *event) {
@@ -204,10 +234,10 @@ void MineWidget::mousePressEvent(QMouseEvent *event) {
 }
 
 void MineWidget::mouseReleaseEvent(QMouseEvent *event) {
-    int gx = event->x() / gsize_;
-    int gy = event->y() / gsize_;
+    int x = event->x() / gsize_;
+    int y = event->y() / gsize_;
 
-    if (gx < 0 || gx >= width_ || gy < 0 || gy > height_)
+    if (x < 0 || x >= width_ || y < 0 || y > height_)
         return;
 
     if (event->button() & Qt::RightButton) {
@@ -216,16 +246,16 @@ void MineWidget::mouseReleaseEvent(QMouseEvent *event) {
         qDebug() << "MouseEvent: " << event->button();
 
         bool needUpdate = true;
-        switch (state_[size_t(gy)][size_t(gx)]) {
+        switch (state_[y][x]) {
         case kNormal: // fall through
         case kNull:
-            state_[size_t(gy)][size_t(gx)] = kFlag;
+            state_[y][x] = kFlag;
             break;
         case kFlag:
-            state_[size_t(gy)][size_t(gx)] = kQuestion;
+            state_[y][x] = kQuestion;
             break;
         case kQuestion:
-            state_[size_t(gy)][size_t(gx)] = kNormal;
+            state_[y][x] = kNormal;
             break;
         default:
             needUpdate = false;
@@ -233,11 +263,22 @@ void MineWidget::mouseReleaseEvent(QMouseEvent *event) {
         }
         if (needUpdate) {
             qDebug() << "update mouse click";
-            update(QRect(gx*gsize_, gy*gsize_, gsize_, gsize_));
+            update(QRect(x*gsize_, y*gsize_, gsize_, gsize_));
         }
     } else {
-        state_[size_t(gy)][size_t(gx)] = kNumber;
-        update(QRect(gx*gsize_, gy*gsize_, gsize_, gsize_));
+        switch (gameState_) {
+        case kNotStarted:
+            gameState_ = kStarted;
+            openBoard(x, y);
+            break;
+        case kStarted:
+            if (state_[y][x] == kNormal)
+                openBoard(x, y);
+            break;
+        default:
+            // do nothing
+            break;
+        }
     }
 }
 
