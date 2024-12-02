@@ -17,7 +17,8 @@ public:
     enum GameState {
         kNotStarted = 0,
         kStarted = 1,
-        kEnded = 2
+        kWin = 2,
+        kLose = 3
     };
 
     enum GridState {
@@ -44,6 +45,7 @@ public:
 private:
     void startBoard(int x, int y);
     void openBoard(int x, int y);
+    void revealBoard(void);
     int countMines(int x, int y);
 
     void drawGrid(QPainter& painter, int x, int y);
@@ -58,16 +60,12 @@ private:
     void drawExploded(QPainter& painter, int x, int y);
     void drawNumber(QPainter& painter, int x, int y, int n);
 
-signals:
-
-public slots:
-
 private:
     int gsize_; // grid size
     int width_;
     int height_;
     int mines_;
-    int percent_;
+    int unveiled_;
     int mouseX_; // last mouse x position in grid coordinate
     int mouseY_; // last mouse y position in grid coordinate
     int gameState_; // game state

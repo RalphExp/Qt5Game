@@ -1,6 +1,7 @@
 #include "minewidget.h"
 
 #include <cassert>
+#include <set>
 
 #include <QPainter>
 #include <QLayout>
@@ -35,8 +36,29 @@ int MineWidget::countMines(int x, int y) {
     return count;
 }
 
-void MineWidget::openBoard(int x, int y) {
+void MineWidget::revealBoard(void) {
+    for (int j = 0; j < height_; ++j) {
+        for (int i = 0; i < width_; ++i) {
 
+        }
+    }
+}
+
+void MineWidget::openBoard(int x, int y) {
+    if (board_[y][x]) {
+        state_[y][x] = kExploded;
+        gameState_ = kLose;
+        revealBoard();
+        return;
+    }
+
+    set<pair<int, int>> s{{x, y}};
+    while (!s.empty()) {
+        auto it = s.begin();
+        x = it->first;
+        y = it->second;
+        state_[y][x] = kNumber + countMines(x, y) - 1;
+    }
 }
 
 void MineWidget::startBoard(int x, int y) {
@@ -129,7 +151,7 @@ void MineWidget::drawQuestion(QPainter& painter, int x, int y) {
 }
 
 void MineWidget::drawNumber(QPainter& painter, int x, int y, int n) {
-    static QColor colors[8] = {QColor("#e0ffe0"),};
+    static QColor colors[8] = {QColor("#80ff80"),};
 
     QRect rect(x*gsize_+4, y*gsize_+4, gsize_-4, gsize_-4);
     QFont font = painter.font();
